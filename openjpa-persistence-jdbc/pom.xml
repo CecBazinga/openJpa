@@ -38,38 +38,7 @@
     <properties>
         <automatic-module-name>org.apache.openjpa.persistence.jdbc</automatic-module-name>
     </properties>
-    <profiles>
-        <!-- Profile for testing with test-dynamic-enhancer -->
-        <profile>
-            <id>test-dynamic-enhancer</id>
 
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <build.enhance>false</build.enhance>
-                <openjpa.DynamicEnhancementAgent>true</openjpa.DynamicEnhancementAgent>
-                <surefire.jvm.args>-Dopenjpa.RuntimeUnenhancedClasses=unsupported ${test.jvm.arguments}</surefire.jvm.args>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <includes>
-                                <include>org/apache/openjpa/persistence/enhance/DynamicEnhancementSuite.java</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-
-
-
-    </profiles>
 
     <dependencies>
         <dependency>
@@ -113,31 +82,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>process-test-classes</phase>
-                        <configuration>
-                            <target>
-                                <ant antfile="src/main/ant/enhancer.xml" target="enhance" inheritRefs="true">
-                                    <property name="maven.test.skip" value="${maven.test.skip}" />
-                                    <property name="test" value="${test}" />
-                                    <property name="outdir" value="${project.build.outputDirectory}" />
-                                    <property name="project.build.testOutputDirectory" value="${project.build.testOutputDirectory}" />
-                                    <property name="openjpa.Log" value="${openjpa.Log}" />
-                                    <property name="build.enhance" value="${build.enhance}" />
-                                </ant>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
