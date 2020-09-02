@@ -1,10 +1,10 @@
 package org.apache.openjpa.lib.util;
 
-import com.sun.javafx.util.Logging;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -66,7 +66,7 @@ public class ClassUtilToClassTest {
 
         }else if (loader == "notValidLoader"){
 
-            cL = Logging.class.getClassLoader();
+            cL = ArrayList.class.getClassLoader();
         }
 
         if(expectedResult==true){
