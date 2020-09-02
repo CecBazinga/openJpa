@@ -28,8 +28,15 @@ public class ClassUtilToClassTest {
 
                 {false , null , true , null},
                 {true  , "org.apache.openjpa.lib.util.ClassUtilToClassTest" , false , "validLoader" } ,
-                {false , "org.apache.openjpa.lib.util.NotAnExistingClass" , false , "notValidLoader" }
+                {false , "org.apache.openjpa.lib.util.NotAnExistingClass" , false , "notValidLoader" },
 
+
+                //aggiunto per migliorare statement e branch coverage
+                {false , "betterNoExistingClass[]" , false , null },
+                //aggiunto per migliorare statement e branch coverage
+                {true , "byte[]" , false , null },
+                //aggiunto per migliorare statement e branch coverage
+                {true , "byte" , false , null }
 
         });
 
@@ -64,15 +71,32 @@ public class ClassUtilToClassTest {
 
         if(expectedResult==true){
 
-            Class theClass = ClassUtil.toClass(path,resolve,cL);
+            Class myClass ;
+            Class theClass = ClassUtil.toClass(path, resolve, cL);
 
-            assertEquals(this.getClass(),theClass);
+            if(path=="byte[]"){
+
+                myClass = byte[].class;
+
+            }else if(path=="byte"){
+
+                myClass = byte.class;
+
+            } else {
+
+                myClass = this.getClass();
+
+            }
+
+            assertEquals(myClass, theClass);
 
         }else{
 
             boolean result = true ;
             try{
+
                 ClassUtil.toClass(path,resolve,cL);
+
             }catch(Exception e){
 
                 e.printStackTrace();

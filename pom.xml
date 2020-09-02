@@ -166,7 +166,7 @@
         <xbean.version>4.17</xbean.version>
         <bval.version>1.1.2</bval.version>
         <jmock.version>2.9.0</jmock.version>
-        <automatic-module-name>-SUBMODULES-NEED-TO-OVERRIDE-THIS-</automatic-module-name>
+
     </properties>
 
 
@@ -409,80 +409,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven.surefire.version}</version>
-                    <configuration>
-                        <argLine>${surefire.jvm.args}</argLine>
-                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <trimStackTrace>false</trimStackTrace>
-                        <useSystemClassLoader>true</useSystemClassLoader>
-                        <excludes>
-                            <!-- exclude classes that include a $; inner classes
-                                 are not test cases per OpenJPA standards -->
-                            <exclude>org/apache/openjpa/**/*$*.class</exclude>
-                        </excludes>
-                    <systemProperties>
-                        <property>
-                            <name>openjpa.Log</name>
-                            <value>${openjpa.Log}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.DynamicEnhancementAgent</name>
-                            <value>${openjpa.DynamicEnhancementAgent}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionDriverName</name>
-                            <value>${connection.driver.name}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionURL</name>
-                            <value>${connection.url}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionUserName</name>
-                            <value>${connection.username}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionPassword</name>
-                            <value>${connection.password}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.jdbc.DBDictionary</name>
-                            <value>${jdbc.DBDictionary}</value>
-                        </property>
-                        <property>
-                            <name>derby.stream.error.file</name>
-                            <value>target/derby.log</value>
-                        </property>
-                        <property>
-                            <name>derby.locks.deadlockTimeout</name>
-                            <value>${derby.locks.deadlockTimeout}</value>
-                        </property>
-                        <property>
-                            <name>derby.locks.waitTimeout</name>
-                            <value>${derby.locks.waitTimeout}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionProperties</name>
-                            <value>${dbcp.args}</value>
-                        </property>
-                        <property>
-                            <name>tests.openjpa.allowfailure</name>
-                            <value>${tests.openjpa.allowfailure}</value>
-                        </property>
-                    </systemProperties>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
                     <version>0.28.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>${maven.surefire.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -777,6 +706,17 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <forkCount>${forkCount.variable}</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+                    <rerunFailingTestsCount>0</rerunFailingTestsCount>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

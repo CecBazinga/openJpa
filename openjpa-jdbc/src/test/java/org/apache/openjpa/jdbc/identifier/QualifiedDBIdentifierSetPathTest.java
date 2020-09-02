@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -16,6 +17,7 @@ public class QualifiedDBIdentifierSetPathTest {
 
     private boolean expectedResult;
     private DBIdentifier i1, i2 ;
+    private String type ;
 
 
     @Parameterized.Parameters
@@ -23,9 +25,28 @@ public class QualifiedDBIdentifierSetPathTest {
         return Arrays.asList(new Object[][]{
 
 
-                {false , null , null},
-                {true  , DBIdentifier.newSchema("Schema_1"), DBIdentifier.newTable("Table_1")},
-                {false , DBIdentifier.NULL , DBIdentifier.NULL }
+                {false , "multi" , null , null},
+                {true  , "multi" , DBIdentifier.newSchema("Schema_1"), DBIdentifier.newTable("Table_1")},
+                {false , "multi" , DBIdentifier.NULL , DBIdentifier.NULL },
+
+                //aggiunto per migliorare statement coverage
+                {true  , "mono" , DBIdentifier.newSchema("Schema_1") , null},
+
+                //aggiunto per migliorare statement e branch coverage
+                {true  , "multi" , DBIdentifier.newTable("Table_1") , DBIdentifier.newColumn("Column_1")},
+
+                //aggiunto per aumentare la branch coverage
+                {true  , "multiNoConventional" , DBIdentifier.newColumn("Column_1"), DBIdentifier.newCatalog("Catalog_1")},
+
+                //aggiunto per aumentare la branch coverage
+                {false , "empty" , null , null},
+
+                //aggiunto per aumentare la branch coverage
+                {true , "list" ,DBIdentifier.newSchema("Schema_1"), DBIdentifier.newTable("Table_1")},
+
+
+
+
 
 
         });
@@ -33,12 +54,13 @@ public class QualifiedDBIdentifierSetPathTest {
     }
 
 
-    public QualifiedDBIdentifierSetPathTest(boolean expectedResult , DBIdentifier i1 , DBIdentifier i2 ){
+    public QualifiedDBIdentifierSetPathTest(boolean expectedResult ,String type , DBIdentifier i1 , DBIdentifier i2 ){
 
 
         this.expectedResult = expectedResult;
         this.i1 = i1;
         this.i2 = i2;
+        this.type = type;
 
     }
 
@@ -49,22 +71,60 @@ public class QualifiedDBIdentifierSetPathTest {
 
         QualifiedDBIdentifier qDBI = QualifiedDBIdentifier.newPath(DBIdentifier.newTable("Table1"));
 
-        qDBI.setPath(i1,i2);
+        String expectedName = null;
 
-        String expectedName;
 
-        if(expectedResult == true){
+        if (type == "multi") {
 
-             expectedName = i1.getName() + "." + i2.getName() ;
+            qDBI.setPath(i1, i2);
 
-        }else {
+            if (expectedResult == true) {
 
-             expectedName = "Table1" ;
+                expectedName = i1.getName() + "." + i2.getName();
+
+            } else {
+
+                expectedName = "Table1";
+
+            }
+
+        } else if (type == "mono") {
+
+            qDBI.setPath(i1);
+
+            expectedName = i1.getName();
+
+        }else if (type=="multiNoConventional"){
+
+            qDBI.setPath(i1, i2);
+
+            if (expectedResult == true) {
+
+                expectedName =  i2.getName();
+
+            } else {
+
+                expectedName = "Table1";
+
+            }
+
+        }else if (type=="empty"){
+
+            qDBI.setPath(null);
+
+            expectedName = "Table1";
+
+        }else if (type=="list"){
+
+            qDBI.setPath(new DBIdentifier[]{i1,i2});
+
+            expectedName = i1.getName() + "." + i2.getName();
 
         }
 
-        assertEquals(expectedName , qDBI.getName());
 
+        assertEquals(expectedName, qDBI.getName());
     }
+
 
 }

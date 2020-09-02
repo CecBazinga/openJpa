@@ -20,8 +20,14 @@ public class ClassUtilGetClassNameTest {
 
 
                 { ClassUtilGetClassNameTest.class.toString() },
-                { null }
+                { null },
 
+
+                {""},                    //aggiunto per migliorare statement e branch coverage
+                {"[I"},                  //aggiunto per migliorare statement e branch coverage
+                {"[K"},                  //aggiunto per migliorare branch coverage
+                {"[ Byte"},              //aggiunto per migliorare statement e branch coverage
+                {"[ Byte;"},             //aggiunto per migliorare statement e branch coverage
 
         });
 
@@ -40,6 +46,14 @@ public class ClassUtilGetClassNameTest {
     @Test
     public void getClassName() {
 
+        /*
+        System.out.println(byte[].class);
+        System.out.println(byte.class);
+        System.out.println(byte[].class.getClass());
+        System.out.println(byte.class.getClass());
+
+
+         */
         String expectedName ;
 
         String className = ClassUtil.getClassName(classPath);
@@ -48,7 +62,23 @@ public class ClassUtilGetClassNameTest {
 
             expectedName = null ;
 
-        }else{
+        }else if(classPath==""){
+
+            expectedName ="" ;
+
+        }else if(classPath=="[I"){
+
+            expectedName ="int[]" ;
+
+        } else if(classPath=="[K"){
+
+            expectedName ="[K[]" ;
+
+        }else if(classPath=="[ Byte" || classPath=="[ Byte;"){
+
+            expectedName ="Byte[]" ;
+
+        } else{
 
             int lastDot = classPath.toString().lastIndexOf('.');
 
@@ -56,7 +86,7 @@ public class ClassUtilGetClassNameTest {
         }
 
 
-        assertEquals( className, expectedName);
+        assertEquals( expectedName , className);
 
     }
 }
